@@ -96,7 +96,7 @@ function rpc.handle_update_file_source(parameters)
   end
 end
 
-function rpc.handle_input_callback(parameters)
+function rpc.handle_input_callback(parameters, options)
   local input = table.remove(parameters.inputs)
   if "list" == input.type or "choice" == input.type then
     vim.ui.select(vim.tbl_values(input.parameters.choices), { prompt = input.parameters.label }, function(item)
@@ -112,6 +112,13 @@ function rpc.handle_input_callback(parameters)
   end
 
   if "text" == input.type then
+
+    if options.text_value ~= nil then
+      parameters.callback.parameters[input.name] = options.text_value
+      rpc.call(parameters.callback.action, parameters.callback.parameters)
+      return
+    end
+
     local opts = { prompt = input.parameters.label, default = input.parameters.default }
     if "file" == input.parameters.type then
       opts.completion = "file"
@@ -133,6 +140,7 @@ function rpc.handle_input_callback(parameters)
   end
 
   if "confirm" == input.type then
+    -- TODO: change confirm to vim.ui.select to keep consistency
     local answer = vim.fn.confirm(input.parameters.label, table.concat({ "Yes", "No" }, "\n"), "Yes", "Question")
     if 1 == answer then
       parameters.callback.parameters[input.name] = true

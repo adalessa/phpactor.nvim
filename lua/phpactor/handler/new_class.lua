@@ -1,8 +1,8 @@
 local rpc = require("phpactor.rpc")
 local utils = require("phpactor.utils")
 
-return function()
+return function(options)
   rpc.call("class_new", {
     current_path = utils.path(),
-  })
+  }, options)
 end

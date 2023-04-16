@@ -45,6 +45,7 @@ function utils.open_message_win(content)
     width = math.floor(vim.o.columns * 0.9),
     border = "single",
   })
+  -- TODO: add quit with q
 end
 
 function utils.get_open_cmd_form_target(target)
